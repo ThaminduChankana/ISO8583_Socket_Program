@@ -86,7 +86,7 @@ public class Handler implements Runnable {
                         for (String key : nameWithWriters.keySet()) {
                             if (n.equals(key)) {
                                 iso8583VisaMsg = iso8583VisaParser.iso8583VisaMessage(input.substring(14));
-                                nameWithWriters.get(key).println("MESSAGE " + name + " : " + iso8583VisaMsg);
+                                nameWithWriters.get(key).println("MESSAGEISO8583 " + name + " : " + iso8583VisaMsg);
                             }
                         }
                     }
@@ -103,7 +103,7 @@ public class Handler implements Runnable {
                 } else if (input.startsWith("CHECKiso8085visa")) {
                     for (PrintWriter writer : writers) {
                         iso8583VisaMsg = iso8583VisaParser.iso8583VisaMessage(input.substring(16));
-                        writer.println("MESSAGE " + name + " : " + iso8583VisaMsg);
+                        writer.println("MESSAGEISO8583 " + name + " : " + iso8583VisaMsg);
                     }
                 } else if (input.startsWith("CHECK")) {
                     for (PrintWriter writer : writers) {

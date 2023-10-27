@@ -118,10 +118,12 @@ public class ChatClient {
             } else if (line.startsWith("REMOVE")) {
                 listModel.removeElementAt(listModel.indexOf(line.substring(6)));
                 onlineList.setModel(listModel);
-            } else if (line.startsWith("MESSAGE")) {
-                String original = line.substring(8);
+            } else if (line.startsWith("MESSAGEISO8583")) {
+                String original = line.substring(15);
                 String[] fields = original.split("-");
                 messageArea.append(String.join("\n", fields) + "\n");
+            }else if (line.startsWith("MESSAGE")) {
+                messageArea.append(line.substring(8) + "\n");
             }
         }
     }
