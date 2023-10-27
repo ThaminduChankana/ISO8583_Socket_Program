@@ -10,8 +10,6 @@ public class ChatServer {
     private static final int PORT = 9001;
     private static final Logger logger = Logger.getLogger(ChatServer.class.getName());
 
-
-
     public static void main(String[] args) throws Exception {
         FileHandler fileHandler = new FileHandler("server.log");
         fileHandler.setFormatter(new CustomLogFormatter());

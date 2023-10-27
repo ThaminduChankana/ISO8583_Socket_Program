@@ -19,6 +19,7 @@ public class Handler implements Runnable {
     private Socket socket;
     private BufferedReader in;
     private PrintWriter out;
+    private ISO8583VisaParser iso8583VisaParser = new ISO8583VisaParser();
 
     public Handler(Socket socket) {
         this.socket = socket;
@@ -64,6 +65,7 @@ public class Handler implements Runnable {
                 String input = in.readLine();
                 String value = "";
                 String sender = "";
+                String iso8583VisaMsg = "";
 
                 if (input.startsWith("LIST")) {
                     value = input.substring(5);
@@ -76,11 +78,20 @@ public class Handler implements Runnable {
 
                 passedNames.add(sender);
 
-                if (input.startsWith("MSG")) {
+                if (input.startsWith("MSGiso8085visa")) {
                     if (input == null) {
                         return;
                     }
-
+                    for (String n : passedNames) {
+                        for (String key : nameWithWriters.keySet()) {
+                            if (n.equals(key)) {
+                                iso8583VisaMsg = iso8583VisaParser.iso8583VisaMessage(input.substring(14));
+                                nameWithWriters.get(key).println("MESSAGE " + name + " : " + iso8583VisaMsg);
+                            }
+                        }
+                    }
+                    passedNames.clear();
+                } else if (input.startsWith("MSG")) {
                     for (String n : passedNames) {
                         for (String key : nameWithWriters.keySet()) {
                             if (n.equals(key)) {
@@ -89,6 +100,11 @@ public class Handler implements Runnable {
                         }
                     }
                     passedNames.clear();
+                } else if (input.startsWith("CHECKiso8085visa")) {
+                    for (PrintWriter writer : writers) {
+                        iso8583VisaMsg = iso8583VisaParser.iso8583VisaMessage(input.substring(16));
+                        writer.println("MESSAGE " + name + " : " + iso8583VisaMsg);
+                    }
                 } else if (input.startsWith("CHECK")) {
                     for (PrintWriter writer : writers) {
                         writer.println("MESSAGE " + name + " : " + input.substring(5));
