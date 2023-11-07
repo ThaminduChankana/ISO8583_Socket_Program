@@ -1,4 +1,7 @@
-INFO : Oct 27, 2023 6:38:09 PM - The chat server is running. 
-INFO : Oct 27, 2023 6:38:19 PM - New client connected 
-INFO : Oct 27, 2023 6:38:22 PM - c1 Connected 
-INFO : Oct 27, 2023 6:39:22 PM - c1 client has left 
+INFO : Nov 07, 2023 11:35:07 PM - The chat server is running. 
+INFO : Nov 07, 2023 11:35:25 PM - New client connected 
+INFO : Nov 07, 2023 11:35:28 PM - c1 Connected 
+INFO : Nov 07, 2023 11:35:39 PM - New client connected 
+INFO : Nov 07, 2023 11:35:45 PM - c2 Connected 
+INFO : Nov 07, 2023 11:43:44 PM - c1 client has left 
+INFO : Nov 07, 2023 11:43:47 PM - c2 client has left 

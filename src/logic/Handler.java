@@ -20,6 +20,7 @@ public class Handler implements Runnable {
     private BufferedReader in;
     private PrintWriter out;
     private ISO8583VisaParser iso8583VisaParser = new ISO8583VisaParser();
+    private ISO8583MastercardParser iso8583MastercardParser = new ISO8583MastercardParser();
 
     public Handler(Socket socket) {
         this.socket = socket;
@@ -66,6 +67,7 @@ public class Handler implements Runnable {
                 String value = "";
                 String sender = "";
                 String iso8583VisaMsg = "";
+                String iso8583MastercardMsg = "";
 
                 if (input.startsWith("LIST")) {
                     value = input.substring(5);
@@ -78,7 +80,7 @@ public class Handler implements Runnable {
 
                 passedNames.add(sender);
 
-                if (input.startsWith("MSGiso8085visa")) {
+                if (input.startsWith("MSGiso8583visa")) {
                     if (input == null) {
                         return;
                     }
@@ -86,12 +88,24 @@ public class Handler implements Runnable {
                         for (String key : nameWithWriters.keySet()) {
                             if (n.equals(key)) {
                                 iso8583VisaMsg = iso8583VisaParser.iso8583VisaMessage(input.substring(14));
-                                nameWithWriters.get(key).println("MESSAGEISO8583 " + name + " : " + iso8583VisaMsg);
+                                nameWithWriters.get(key).println("MESSAGEISO8583VISA " + name + " : " + iso8583VisaMsg);
                             }
                         }
                     }
                     passedNames.clear();
-                } else if (input.startsWith("MSG")) {
+                } else if (input.startsWith("MSGiso8583master")) {
+                    for (String n : passedNames) {
+                        for (String key : nameWithWriters.keySet()) {
+                            if (n.equals(key)) {
+                                iso8583MastercardMsg = iso8583VisaParser.iso8583VisaMessage(input.substring(16));
+                                nameWithWriters.get(key).println("MESSAGEISO8583MASTERCARD " + name + " : " + iso8583MastercardMsg);
+                            }
+                        }
+                    }
+                    passedNames.clear();
+                }
+
+                else if (input.startsWith("MSG")) {
                     for (String n : passedNames) {
                         for (String key : nameWithWriters.keySet()) {
                             if (n.equals(key)) {
@@ -100,10 +114,15 @@ public class Handler implements Runnable {
                         }
                     }
                     passedNames.clear();
-                } else if (input.startsWith("CHECKiso8085visa")) {
+                } else if (input.startsWith("CHECKiso8583mastercard")) {
+                    for (PrintWriter writer : writers) {
+                        iso8583VisaMsg = iso8583VisaParser.iso8583VisaMessage(input.substring(22));
+                        writer.println("MESSAGEISO8583MASTERCARD " + name + " : " + iso8583VisaMsg);
+                    }
+                }else if (input.startsWith("CHECKiso8583visa")) {
                     for (PrintWriter writer : writers) {
                         iso8583VisaMsg = iso8583VisaParser.iso8583VisaMessage(input.substring(16));
-                        writer.println("MESSAGEISO8583 " + name + " : " + iso8583VisaMsg);
+                        writer.println("MESSAGEISO8583VISA " + name + " : " + iso8583VisaMsg);
                     }
                 } else if (input.startsWith("CHECK")) {
                     for (PrintWriter writer : writers) {
